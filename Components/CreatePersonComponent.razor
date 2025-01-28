@@ -1,0 +1,39 @@
+@using Models
+@using Components
+
+<FluentCard Style="max-width: 500px; margin: 20px auto; padding: 20px;">
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+        <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
+            Opret @Text
+        </FluentLabel>
+
+        <FluentTextField @bind-Value="@person.Name" Label="Name" Required="true" />
+        
+        <FluentTextField @bind-Value="@person.Address" Label="Address" Required="true" />
+        
+        <FluentDatePicker @bind-Value="@person.BirthDate" Label="Birth Date" Required="true" />
+        
+        <FluentCheckbox @bind-Value="@person.IsAlive" Label="Is Alive" />
+
+        <FluentButton Appearance="Appearance.Accent" OnClick="CreatePerson">
+            Opret Person
+        </FluentButton>
+        <FluentButton Appearance="Appearance.Neutral" OnClick="OnCancel">
+            Afbryd
+        </FluentButton>
+    </FluentStack>
+</FluentCard>
+
+<button @onclick="CreatePerson">Opret Person</button>
+<button @onclick="OnCancel">Afbryd</button>
+
+
+@code{
+
+    [Parameter] public string Text { get; set; }
+    [Parameter] public EventCallback CreatePerson { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    @* [Parameter] public EventCallback OnC{ get; set; }
+    [Parameter] public EventCallback OnNo { get; set; } *@
+    Person person = new();
+}

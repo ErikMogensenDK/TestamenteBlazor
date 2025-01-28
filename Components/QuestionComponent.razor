@@ -1,0 +1,31 @@
+@code {
+    [Parameter] public string Text { get; set; }
+    [Parameter] public EventCallback OnYes { get; set; }
+    [Parameter] public EventCallback OnNo { get; set; }
+}
+<style>
+    .centered-label {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+<FluentCard Style="max-width: 400px; margin: 50px auto; padding: 20px;">
+    <FluentStack Orientation="Orientation.Vertical" VerticalAlignment="VerticalAlignment.Center">
+        <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
+            @Text 
+        </FluentLabel>
+        
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentButton Appearance="Appearance.Accent">
+                Yes
+            </FluentButton>
+            <FluentButton Appearance="Appearance.Neutral">
+                No
+            </FluentButton>
+        </FluentStack>
+    </FluentStack>
+</FluentCard>
+
+@* <FluentButton Appearance="Appearence.Accent" @onclick="OnYes">Yes</FluentButton>
+<FluentButton Appearence= "Appearence.Neutral" @onclick="OnNo">No</FluentButton> *@

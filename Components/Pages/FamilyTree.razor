@@ -1,25 +1,93 @@
-﻿@page "/stamtræ"
+﻿@using Components
+@page "/flow"
+@page "/flow/{Step:int}"
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
+@if(showQuestionComponents)
+{
+    switch (currentStep)
+    {
+        case 1:
+        <div>
+            <Step1 OnNext="@(() => NextStep())" />
+            <QuestionComponent 
+                Text = "Har du, eller har du haft børn?" 
+                OnYes = "@EnterCreatePersonFlow("Børn")"
+                OnNo = "@NextStep"
+                ></QuestionComponent>
+            </div>
+            break;
+        case 2:
+            <Step2 OnNext="@(() => NextStep())" OnPrevious="@(() => PreviousStep())" />
+            <div>
+                <h2>Step 1</h2>
+                <p>This is the content for step 2</p>
+                <button @onclick="PreviousStep">Previous</button>
+                <button @onclick="NextStep">Next</button>
+            </div>
+            break;
+        case 3:
+            <Step3 OnPrevious="@(() => PreviousStep())" OnComplete="@(() => Complete())" />
+            break;
+    }
+}
 
-<div role="status" style="padding-bottom: 1em;">
-    Current count: <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge>
-</div>
-
-<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton>
+@* <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton> *@
 
 @code {
-    private int currentCount = 0;
+    private int currentStep = 1;
+    private const int lastStep = 4;
+    private bool showCreatePersonComponent = false;
+    private bool showQuestionComponents = true;
+    private string createPersonTitle = "";
+    [Parameter]
+    public int Step { get; set; } = 1;
 
-    private void IncrementCount()
+    protected override void OnParametersSet()
     {
-        currentCount++;
+        currentStep = Step;
+        if (currentStep < 1 || currentStep > lastStep)
+        {
+            currentStep = 1;
+            NavigationManager.NavigateTo("/flow/1", false);
+        }
     }
-    private List<Node> GetNodes()
+
+    private void NextStep()
+    {
+        currentStep++;
+        UpdateUrl();
+    }
+
+    private void PreviousStep()
+    {
+        currentStep--;
+        UpdateUrl();
+    }
+
+    private void UpdateUrl()
+    {
+        NavigationManager.NavigateTo($"/flow/{currentStep}", false);
+    }
+    private EventCallback EnterCreatePersonFlow(string title)
+    {
+        createPersonTitle = title;
+        showCreatePersonComponent = true;
+        showQuestionComponents=false;
+        return;
+    }
+
+    private void Complete()
+    {
+        // Handle flow completion
+    }
+
+    @* private List<Node> GetNodes()
         {
             Node node = new();
-        }
+
+        } *@
 }

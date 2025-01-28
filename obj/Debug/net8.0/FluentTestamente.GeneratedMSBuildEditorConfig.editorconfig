@@ -22,6 +22,10 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/erikm/repos/TestamenteBlazor/Components/CreatePersonComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDcmVhdGVQZXJzb25Db21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/erikm/repos/TestamenteBlazor/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -44,6 +48,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/erikm/repos/TestamenteBlazor/Components/Pages/InheritanceSplit.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmhlcml0YW5jZVNwbGl0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/erikm/repos/TestamenteBlazor/Components/QuestionComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xRdWVzdGlvbkNvbXBvbmVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/erikm/repos/TestamenteBlazor/Components/Routes.razor]
