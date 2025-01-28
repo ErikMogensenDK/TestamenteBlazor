@@ -1,5 +1,34 @@
 @using Models
 @using Components
+<style>
+    .person-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .person-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #007bff;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .name {
+        font-size: 16px;
+    }
+</style>
 
 <FluentCard Style="max-width: 500px; margin: 20px auto; padding: 20px;">
     <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
@@ -11,29 +40,79 @@
         
         <FluentTextField @bind-Value="@person.Address" Label="Address" Required="true" />
         
-        <FluentDatePicker @bind-Value="@person.BirthDate" Label="Birth Date" Required="true" />
+        @* <FluentDatePicker @bind-Value="@person.BirthDate" Label="Birth Date" Required="true" /> *@
         
         <FluentCheckbox @bind-Value="@person.IsAlive" Label="Is Alive" />
 
-        <FluentButton Appearance="Appearance.Accent" OnClick="CreatePerson">
-            Opret Person
-        </FluentButton>
-        <FluentButton Appearance="Appearance.Neutral" OnClick="OnCancel">
-            Afbryd
-        </FluentButton>
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentButton Appearance="Appearance.Accent" OnClick="CreatePersonAsync">
+                Opret person
+            </FluentButton>
+        </FluentStack>
+
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
+            <FluentButton Appearance="Appearance.Neutral" OnClick="OnFinished">
+                Jeg har tilføjet alle mine børn
+            </FluentButton>
+            <FluentButton Appearance="Appearance.Neutral" OnClick="OnCancel">
+                Afbryd
+            </FluentButton>
+        </FluentStack>
     </FluentStack>
 </FluentCard>
+<div>
+    <FluentHeader>
+        Tilføjede personer
+    </FluentHeader>
 
-<button @onclick="CreatePerson">Opret Person</button>
-<button @onclick="OnCancel">Afbryd</button>
+    <FluentDataGrid Items="@savedPeople" GridTemplateColumns="1fr 2fr 1fr 1fr">
+        <PropertyColumn Property="@(p => p.Name)" Title="Name" />
+        <PropertyColumn Property="@(p => p.Address)" Title="Address" />
+        <PropertyColumn Property="@(p => p.Birthdate)" Title="Birthdate" Format="d" />
+        <TemplateColumn Title="Is Alive">
+            <ColumnOptions>
+                <div style="text-align: center;">Is Alive</div>
+            </ColumnOptions>
+            <CellTemplate>
+                <FluentCheckbox Checked="@context.IsAlive" ReadOnly="true" />
+            </CellTemplate>
+        </TemplateColumn>
+    </FluentDataGrid>
+
+@* @if(savedPeople != null && savedPeople.Any())
+{
+    <ul class="person-list"> @{
+            foreach (var person in savedPeople)
+            {
+                <li>
+                    <div class="avatar">@person.Name[0]</div>
+                    <span class="name">@person.Name</span>
+                </li>
+            }
+        }
+    </ul>
+    }*@
+</div> 
+
+@* <button @onclick="CreatePerson">Opret Person</button>
+<button @onclick="OnCancel">Afbryd</button> *@
 
 
-@code{
+@code {
+    private Person person = new();
 
     [Parameter] public string Text { get; set; }
-    [Parameter] public EventCallback CreatePerson { get; set; }
+    [Parameter] public EventCallback OnFinished { get; set; }
+    //[Parameter] public Task CreatePersonAsync { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     @* [Parameter] public EventCallback OnC{ get; set; }
     [Parameter] public EventCallback OnNo { get; set; } *@
-    Person person = new();
+    private List<Person> savedPeople = new();
+
+    public async Task CreatePersonAsync()
+    {
+        savedPeople.Add(person);
+        StateHasChanged();
+    }
+
 }

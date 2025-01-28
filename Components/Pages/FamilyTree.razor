@@ -1,83 +1,84 @@
 ﻿@using Components
 @page "/flow"
-@page "/flow/{Step:int}"
+@* @page "/flow/{State:pageState}" *@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
-
-@if(showQuestionComponents)
+@switch (currentState)
 {
-    switch (currentStep)
-    {
-        case 1:
+    case pageState.AskAboutChildren:
+    <div>
+        <Step1 OnNext="@(() => NextStep())" />
+        <QuestionComponent 
+            Text = "Har du, eller har du haft børn?" 
+            OnYes = "@(() => {currentState = pageState.AddChildren; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AskAboutPartner; StateHasChanged();})"
+            ></QuestionComponent>
+        </div>
+        break;
+    case pageState.AddChildren:
         <div>
             <Step1 OnNext="@(() => NextStep())" />
-            <QuestionComponent 
-                Text = "Har du, eller har du haft børn?" 
-                OnYes = "@EnterCreatePersonFlow("Børn")"
-                OnNo = "@NextStep"
-                ></QuestionComponent>
-            </div>
-            break;
-        case 2:
-            <Step2 OnNext="@(() => NextStep())" OnPrevious="@(() => PreviousStep())" />
-            <div>
-                <h2>Step 1</h2>
-                <p>This is the content for step 2</p>
-                <button @onclick="PreviousStep">Previous</button>
-                <button @onclick="NextStep">Next</button>
-            </div>
-            break;
-        case 3:
-            <Step3 OnPrevious="@(() => PreviousStep())" OnComplete="@(() => Complete())" />
-            break;
-    }
+            <CreatePersonComponent 
+                Text = "Angiv data for barn!"
+                OnFinished = "@(() => {currentState = pageState.AskAboutPartner; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutChildren; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
+        break;
+    case pageState.AskAboutPartner:
+        <Step2 OnNext="@(() => NextStep())" OnPrevious="@(() => PreviousStep())" />
+        <div>
+            <h2>Step 1</h2>
+            <p>This is the content for step 2</p>
+            <button @onclick="PreviousStep">Previous</button>
+            <button @onclick="NextStep">Next</button>
+        </div>
+        break;
+    case pageState.AddPartner:
+        <Step3 OnPrevious="@(() => PreviousStep())" OnComplete="@(() => Complete())" />
+        break;
 }
-
-@* <FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">Click me</FluentButton> *@
 
 @code {
     private int currentStep = 1;
     private const int lastStep = 4;
-    private bool showCreatePersonComponent = false;
-    private bool showQuestionComponents = true;
     private string createPersonTitle = "";
+    private pageState currentState = pageState.AskAboutChildren;
+    public enum pageState { AskAboutChildren, AddChildren, AskAboutPartner, AddPartner }
     [Parameter]
-    public int Step { get; set; } = 1;
+    public pageState state { get; set; }
 
     protected override void OnParametersSet()
     {
-        currentStep = Step;
-        if (currentStep < 1 || currentStep > lastStep)
+        currentState = state;
+        @* NavigationManager.NavigateTo($"/flow/{state}", false); *@
+        @* if (currentStep < 1 || currentStep > lastStep)
         {
             currentStep = 1;
-            NavigationManager.NavigateTo("/flow/1", false);
-        }
+            NavigationManager.NavigateTo("/flow/AskAboutChildren", false);
+        } *@
     }
 
     private void NextStep()
     {
-        currentStep++;
-        UpdateUrl();
+        //currentState = pageState.Parse((pageState)((int)currentState + 1))
+        //currentStep++;
+        currentState = pageState.AskAboutPartner;
+        StateHasChanged();
+        //UpdateUrl();
     }
 
     private void PreviousStep()
     {
-        currentStep--;
+        //currentState = (pageState)((int)currentState - 1)
         UpdateUrl();
     }
 
     private void UpdateUrl()
     {
         NavigationManager.NavigateTo($"/flow/{currentStep}", false);
-    }
-    private EventCallback EnterCreatePersonFlow(string title)
-    {
-        createPersonTitle = title;
-        showCreatePersonComponent = true;
-        showQuestionComponents=false;
-        return;
     }
 
     private void Complete()

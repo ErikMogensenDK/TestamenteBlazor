@@ -17,15 +17,12 @@
         </FluentLabel>
         
         <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
-            <FluentButton Appearance="Appearance.Accent">
+            <FluentButton Appearance="Appearance.Accent" @onclick="OnYes">
                 Yes
             </FluentButton>
-            <FluentButton Appearance="Appearance.Neutral">
+            <FluentButton Appearance="Appearance.Neutral" @onclick="OnNo">
                 No
             </FluentButton>
         </FluentStack>
     </FluentStack>
 </FluentCard>
-
-@* <FluentButton Appearance="Appearence.Accent" @onclick="OnYes">Yes</FluentButton>
-<FluentButton Appearence= "Appearence.Neutral" @onclick="OnNo">No</FluentButton> *@
