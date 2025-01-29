@@ -1,48 +1,19 @@
-@using Models
-@using Components
-<style>
-    .person-list {
-        list-style-type: none;
-        padding: 0;
-    }
+@namespace FluentTestamente.Components
+@using FluentTestamente.Models
 
-    .person-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: #007bff;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        margin-right: 10px;
-    }
-
-    .name {
-        font-size: 16px;
-    }
-</style>
-
-<FluentCard Style="max-width: 500px; margin: 20px auto; padding: 20px;">
+<FluentCard Style="max-width: 500px; min-height: 500px; margin: 20px auto; padding: 20px;overflow: visible;">
     <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
         <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
-            Opret @Text
+            @Text
         </FluentLabel>
 
-        <FluentTextField @bind-Value="@person.Name" Label="Name" Required="true" />
+        <FluentTextField @bind-Value="@person.Name" Label="Fulde navn" Required="true" />
         
-        <FluentTextField @bind-Value="@person.Address" Label="Address" Required="true" />
+        <FluentDatePicker @bind-Value="@selectedDate" Label="Fødselsdato" Required="true" />
         
-        @* <FluentDatePicker @bind-Value="@person.BirthDate" Label="Birth Date" Required="true" /> *@
+        <FluentTextField @bind-Value="@person.Address" Label="Addresse" Required="true" />
         
-        <FluentCheckbox @bind-Value="@person.IsAlive" Label="Is Alive" />
+        <FluentCheckbox @bind-Value="@person.IsAlive" Label="Nulevende"/>
 
         <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
             <FluentButton Appearance="Appearance.Accent" OnClick="CreatePersonAsync">
@@ -52,7 +23,7 @@
 
         <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
             <FluentButton Appearance="Appearance.Neutral" OnClick="OnFinished">
-                Jeg har tilføjet alle mine børn
+                Jeg er færdig med at tilføje data
             </FluentButton>
             <FluentButton Appearance="Appearance.Neutral" OnClick="OnCancel">
                 Afbryd
@@ -64,38 +35,13 @@
     <FluentHeader>
         Tilføjede personer
     </FluentHeader>
-
-    <FluentDataGrid Items="@savedPeople" GridTemplateColumns="1fr 2fr 1fr 1fr">
-        <PropertyColumn Property="@(p => p.Name)" Title="Name" />
-        <PropertyColumn Property="@(p => p.Address)" Title="Address" />
-        <PropertyColumn Property="@(p => p.Birthdate)" Title="Birthdate" Format="d" />
-        <TemplateColumn Title="Is Alive">
-            <ColumnOptions>
-                <div style="text-align: center;">Is Alive</div>
-            </ColumnOptions>
-            <CellTemplate>
-                <FluentCheckbox Checked="@context.IsAlive" ReadOnly="true" />
-            </CellTemplate>
-        </TemplateColumn>
-    </FluentDataGrid>
-
-@* @if(savedPeople != null && savedPeople.Any())
-{
-    <ul class="person-list"> @{
-            foreach (var person in savedPeople)
-            {
-                <li>
-                    <div class="avatar">@person.Name[0]</div>
-                    <span class="name">@person.Name</span>
-                </li>
-            }
-        }
-    </ul>
-    }*@
+<FluentDataGrid Id="personGrid" Items="@savedPeopleQueryable" GridTemplateColumns="1fr 1fr 1fr 2fr"  TGridItem="Person">
+    <PropertyColumn Title="Navn" Property="@(c => c!.Name)" Align="Align.Start"/>
+    <PropertyColumn Title="Addresse" Property="@(c => c!.Address)" Align="Align.Center"/>
+    <PropertyColumn Title="Fødselsdato" Property="@(c => c!.DateOnlyBirthDateString)" Align="Align.Center"/>
+    <PropertyColumn Title="Nulevende" Property="@(c => c!.IsAlive)" Align="Align.End"/>
+</FluentDataGrid>
 </div> 
-
-@* <button @onclick="CreatePerson">Opret Person</button>
-<button @onclick="OnCancel">Afbryd</button> *@
 
 
 @code {
@@ -103,16 +49,33 @@
 
     [Parameter] public string Text { get; set; }
     [Parameter] public EventCallback OnFinished { get; set; }
-    //[Parameter] public Task CreatePersonAsync { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
-    @* [Parameter] public EventCallback OnC{ get; set; }
-    [Parameter] public EventCallback OnNo { get; set; } *@
     private List<Person> savedPeople = new();
+    private IQueryable<Person?> savedPeopleQueryable;
+    private DateTime? selectedDate;
 
-    public async Task CreatePersonAsync()
+    protected override void OnInitialized()
     {
-        savedPeople.Add(person);
+        base.OnInitialized();
+        selectedDate = DateTime.Now.AddYears(-30); 
+    }
+
+
+    private async Task CreatePersonAsync()
+    {
+        savedPeople.Add(CopyPerson(person));
+        savedPeopleQueryable = savedPeople.AsQueryable();
         StateHasChanged();
+    }
+    private Person CopyPerson(Person person)
+    {
+        Person newPerson = new();
+        newPerson.Name = person.Name;
+        newPerson.Address = person.Address;
+        newPerson.IsAlive= person.IsAlive;
+        newPerson.BirthDate = selectedDate;
+        newPerson.DateOnlyBirthDateString = newPerson.BirthDate?.ToString("dd-MM-yyyy");
+        return newPerson;
     }
 
 }

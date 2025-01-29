@@ -9,35 +9,40 @@
 {
     case pageState.AskAboutChildren:
     <div>
-        <Step1 OnNext="@(() => NextStep())" />
         <QuestionComponent 
-            Text = "Har du, eller har du haft børn?" 
+            Text = "Har du, eller har du haft et eller flere børn?" 
             OnYes = "@(() => {currentState = pageState.AddChildren; StateHasChanged();})"
-            OnNo = "@(() => {currentState = pageState.AskAboutPartner; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})"
             ></QuestionComponent>
         </div>
         break;
     case pageState.AddChildren:
         <div>
-            <Step1 OnNext="@(() => NextStep())" />
             <CreatePersonComponent 
-                Text = "Angiv data for barn!"
-                OnFinished = "@(() => {currentState = pageState.AskAboutPartner; StateHasChanged();})"
+                Text = "Angiv data for barn/børn"
+                OnFinished = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutChildren; StateHasChanged();})">
             </CreatePersonComponent>
         </div>
         break;
-    case pageState.AskAboutPartner:
-        <Step2 OnNext="@(() => NextStep())" OnPrevious="@(() => PreviousStep())" />
+    case pageState.AskAboutSpouse:
         <div>
-            <h2>Step 1</h2>
-            <p>This is the content for step 2</p>
-            <button @onclick="PreviousStep">Previous</button>
-            <button @onclick="NextStep">Next</button>
+        <QuestionComponent 
+            Text = "Har du en nulevende ægtefælle?" 
+            OnYes = "@(() => {currentState = pageState.AddSpouse; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})"
+            >
+        </QuestionComponent>
         </div>
         break;
-    case pageState.AddPartner:
-        <Step3 OnPrevious="@(() => PreviousStep())" OnComplete="@(() => Complete())" />
+    case pageState.AddSpouse:
+        <div>
+            <CreatePersonComponent 
+                Text = "Angiv data for Ægtefælle"
+                OnFinished = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
         break;
 }
 
@@ -46,7 +51,7 @@
     private const int lastStep = 4;
     private string createPersonTitle = "";
     private pageState currentState = pageState.AskAboutChildren;
-    public enum pageState { AskAboutChildren, AddChildren, AskAboutPartner, AddPartner }
+    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents }
     [Parameter]
     public pageState state { get; set; }
 
@@ -65,7 +70,7 @@
     {
         //currentState = pageState.Parse((pageState)((int)currentState + 1))
         //currentStep++;
-        currentState = pageState.AskAboutPartner;
+        currentState = pageState.AskAboutSpouse;
         StateHasChanged();
         //UpdateUrl();
     }
