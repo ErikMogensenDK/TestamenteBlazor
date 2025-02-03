@@ -44,6 +44,43 @@
             </CreatePersonComponent>
         </div>
         break;
+        // check for spouse children - in which case parents/siblings are irrelevent.
+    case pageState.AskAboutParents:
+        <div>
+        <QuestionComponent 
+            Text = "Har du en eller flere levende forældre?" 
+            OnYes = "@(() => {currentState = pageState.AddParents; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
+            >
+        </QuestionComponent>
+        </div>
+        break;
+    case pageState.AddParents:
+        <div>
+            <CreatePersonComponent 
+                Text = "Angiv data for Forældre"
+                OnFinished = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
+        break;
+    case pageState.AskAboutSiblings:
+        <div>
+            <QuestionComponent Text="Har du en eller flere levende biologiske søskende?"
+                OnYes="@(() => {currentState = pageState.AddSiblings; StateHasChanged();})"
+                OnNo="@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})">
+            </QuestionComponent>
+        </div>
+        break;
+    case pageState.AddSiblings:
+        <div>
+            <CreatePersonComponent 
+                Text = "Angiv data for biologiske søskende"
+                OnFinished = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
+        break;
 }
 
 @code {
@@ -51,7 +88,7 @@
     private const int lastStep = 4;
     private string createPersonTitle = "";
     private pageState currentState = pageState.AskAboutChildren;
-    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents }
+    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents, AddParents, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandParents}
     [Parameter]
     public pageState state { get; set; }
 
