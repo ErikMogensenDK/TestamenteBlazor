@@ -1,0 +1,16 @@
+@using Models
+
+<FluentHeader>
+	Tilføjede personer
+</FluentHeader>
+<FluentDataGrid Id="personGrid" Items="@PeopleQueryable" GridTemplateColumns="1fr 1fr 1fr 2fr"  TGridItem="Person">
+    <PropertyColumn Title="Navn" Property="@(c => c!.Name)" Align="Align.Start"/>
+    <PropertyColumn Title="Addresse" Property="@(c => c!.Address)" Align="Align.Center"/>
+    <PropertyColumn Title="Fødselsdato" Property="@(c => c!.DateOnlyBirthDateString)" Align="Align.Center"/>
+    <PropertyColumn Title="Nulevende" Property="@(c => c!.IsAlive)" Align="Align.End"/>
+</FluentDataGrid>
+
+@code{
+	[Parameter]
+	public IQueryable<Person?> PeopleQueryable{ get; set; }
+}

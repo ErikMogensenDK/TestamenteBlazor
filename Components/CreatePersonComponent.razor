@@ -1,5 +1,5 @@
 @namespace FluentTestamente.Components
-@using FluentTestamente.Models
+@using Models
 
 <FluentCard Style="max-width: 500px; min-height: 500px; margin: 20px auto; padding: 20px;overflow: visible;">
     <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
@@ -32,15 +32,8 @@
     </FluentStack>
 </FluentCard>
 <div>
-    <FluentHeader>
-        Tilføjede personer
-    </FluentHeader>
-<FluentDataGrid Id="personGrid" Items="@savedPeopleQueryable" GridTemplateColumns="1fr 1fr 1fr 2fr"  TGridItem="Person">
-    <PropertyColumn Title="Navn" Property="@(c => c!.Name)" Align="Align.Start"/>
-    <PropertyColumn Title="Addresse" Property="@(c => c!.Address)" Align="Align.Center"/>
-    <PropertyColumn Title="Fødselsdato" Property="@(c => c!.DateOnlyBirthDateString)" Align="Align.Center"/>
-    <PropertyColumn Title="Nulevende" Property="@(c => c!.IsAlive)" Align="Align.End"/>
-</FluentDataGrid>
+    <PeopleListComponent PeopleQueryable=@savedPeopleQueryable>
+    </PeopleListComponent>
 </div> 
 
 
@@ -50,6 +43,7 @@
     [Parameter] public string Text { get; set; }
     [Parameter] public EventCallback OnFinished { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public List<Person> Inheritants {get;set;}
     private List<Person> savedPeople = new();
     private IQueryable<Person?> savedPeopleQueryable;
     private DateTime? selectedDate;
@@ -63,6 +57,7 @@
 
     private async Task CreatePersonAsync()
     {
+        Inheritants.Add(CopyPerson(person));
         savedPeople.Add(CopyPerson(person));
         savedPeopleQueryable = savedPeople.AsQueryable();
         StateHasChanged();

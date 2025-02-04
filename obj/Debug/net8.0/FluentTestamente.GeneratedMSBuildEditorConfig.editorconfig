@@ -50,6 +50,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmhlcml0YW5jZVNwbGl0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/erikm/repos/TestamenteBlazor/Components/PeopleListComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQZW9wbGVMaXN0Q29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/erikm/repos/TestamenteBlazor/Components/QuestionComponent.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xRdWVzdGlvbkNvbXBvbmVudC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,4 +1,5 @@
 ﻿@using Components
+@using Models
 @page "/flow"
 @* @page "/flow/{State:pageState}" *@
 @inject NavigationManager NavigationManager
@@ -19,6 +20,7 @@
     case pageState.AddChildren:
         <div>
             <CreatePersonComponent 
+                Inheritants = "@Inheritants"
                 Text = "Angiv data for barn/børn"
                 OnFinished = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutChildren; StateHasChanged();})">
@@ -38,6 +40,7 @@
     case pageState.AddSpouse:
         <div>
             <CreatePersonComponent 
+                Inheritants = "@Inheritants"
                 Text = "Angiv data for Ægtefælle"
                 OnFinished = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})">
@@ -58,6 +61,7 @@
     case pageState.AddParents:
         <div>
             <CreatePersonComponent 
+                Inheritants = "@Inheritants"
                 Text = "Angiv data for Forældre"
                 OnFinished = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})">
@@ -75,10 +79,38 @@
     case pageState.AddSiblings:
         <div>
             <CreatePersonComponent 
+                Inheritants = "@Inheritants"
                 Text = "Angiv data for biologiske søskende"
-                OnFinished = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
-                OnCancel = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})">
+                OnFinished = "@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})">
             </CreatePersonComponent>
+        </div>
+        break;
+    case pageState.AskAboutGrandparents:
+        <div>
+        <div>
+            <QuestionComponent Text="Har du en eller flere levende biologiske bedsteforældre?"
+                OnYes="@(() => {currentState = pageState.AddGrandparents; StateHasChanged();})"
+                OnNo="@(() => {currentState = pageState.Finished; StateHasChanged();})">
+            </QuestionComponent>
+        </div>
+        </div>
+        break;
+    case pageState.AddGrandparents:
+        <div>
+            <CreatePersonComponent 
+                Inheritants = "@Inheritants"
+                Text = "Angiv data for biologiske søskende"
+                OnFinished = "@(() => {currentState = pageState.Finished; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
+        break;
+    case pageState.Finished:
+        <div>
+            <span>Alle arvinger er blevet tilføjet!</span>
+            <span>Tryk på knappen nedenfor, for at se fordeling af arv!</span>
+            <FluentButton>Gå til arvefordeling!</FluentButton>
         </div>
         break;
 }
@@ -88,9 +120,12 @@
     private const int lastStep = 4;
     private string createPersonTitle = "";
     private pageState currentState = pageState.AskAboutChildren;
-    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents, AddParents, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandParents}
-    [Parameter]
+    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents, AddParents, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandparents, Finished}
     public pageState state { get; set; }
+
+    [Parameter]
+    public List<Person> Inheritants { get; set; } = new();
+
 
     protected override void OnParametersSet()
     {
@@ -112,25 +147,9 @@
         //UpdateUrl();
     }
 
-    private void PreviousStep()
-    {
-        //currentState = (pageState)((int)currentState - 1)
-        UpdateUrl();
-    }
-
     private void UpdateUrl()
     {
         NavigationManager.NavigateTo($"/flow/{currentStep}", false);
     }
 
-    private void Complete()
-    {
-        // Handle flow completion
-    }
-
-    @* private List<Node> GetNodes()
-        {
-            Node node = new();
-
-        } *@
 }
