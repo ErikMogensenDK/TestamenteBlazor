@@ -53,6 +53,10 @@
             "Microsoft.FluentUI.AspNetCore.Components.Icons": {
               "target": "Package",
               "version": "[4.11.1, )"
+            },
+            "nswag.aspnetcore": {
+              "target": "Package",
+              "version": "[14.2.0, )"
             }
           },
           "imports": [
