@@ -1,4 +1,4 @@
-﻿@* @inject TestamenteApiClient testamenteApiClient
+﻿@inject TestamenteApiClient testamenteApiClient
 @using Components
 @page "/fordeling"
 
@@ -16,5 +16,5 @@
     private async GetPeople()
     {
         testamenteApiClient.GetPeopleAssociatedWithUser(user.Id);
-    } *@
-@* } *@
+    }
+}
