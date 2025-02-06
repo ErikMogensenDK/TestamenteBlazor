@@ -9,7 +9,8 @@
       "FluentTestamente/1.0.0": {
         "dependencies": {
           "Microsoft.FluentUI.AspNetCore.Components": "4.11.1",
-          "Microsoft.FluentUI.AspNetCore.Components.Icons": "4.11.1"
+          "Microsoft.FluentUI.AspNetCore.Components.Icons": "4.11.1",
+          "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
           "FluentTestamente.dll": {}
@@ -267,6 +268,14 @@
           }
         }
       },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
       "System.IO.Pipelines/8.0.0": {}
     }
   },
@@ -443,6 +452,13 @@
       "sha512": "sha512-UYSbAkNGTWVUne3I04/9IRQel3Bt1Ww6Y5cjvZEZ89rWhBD1yWu7YDotvQS62V6mgSfFaXXPGrCUm1VG824QXw==",
       "path": "microsoft.jsinterop/8.0.11",
       "hashPath": "microsoft.jsinterop.8.0.11.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
     "System.IO.Pipelines/8.0.0": {
       "type": "package",

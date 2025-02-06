@@ -47,8 +47,13 @@
             </CreatePersonComponent>
         </div>
         break;
-        // check for spouse children - in which case parents/siblings are irrelevent.
     case pageState.AskAboutParents:
+    if (Inheritants.Count > 0)
+    {
+        currentState=pageState.Finished;
+        StateHasChanged();
+        break;
+    }
         <div>
         <QuestionComponent 
             Text = "Har du en eller flere levende forældre?" 
@@ -86,7 +91,15 @@
             </CreatePersonComponent>
         </div>
         break;
+
+    //if any inheritants have been added at this point, grandparents are irrelevant!
     case pageState.AskAboutGrandparents:
+    if (Inheritants.Count > 0)
+    {
+        currentState=pageState.Finished;
+        StateHasChanged();
+        break;
+    }
         <div>
         <div>
             <QuestionComponent Text="Har du en eller flere levende biologiske bedsteforældre?"
@@ -108,16 +121,31 @@
         break;
     case pageState.Finished:
         <div>
-            <span>Alle arvinger er blevet tilføjet!</span>
-            <span>Tryk på knappen nedenfor, for at se fordeling af arv!</span>
-            <FluentButton>Gå til arvefordeling!</FluentButton>
+            <FluentCard Style="max-width: 500px; min-height: 300px; margin: 20px auto; padding: 20px;overflow: visible;">
+
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+
+            <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
+                Alle arvinger er blevet tilføjet!
+                Tryk på knappen nedenfor, for at se fordeling af arv.
+            </FluentLabel>
+
+            @* <FluentButton Appearance="Appearance.Accent" OnClick="">
+                Gå til arvefordeling!
+            </FluentButton> *@
+            <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center"> 
+                <FluentButton Appearance="Appearance.Accent" OnClick="@(() => NavigationManager.NavigateTo("/fordeling"))">
+                    Gå til arvefordeling!
+                </FluentButton>
+            </FluentStack>
+
+            </FluentStack>
+            </FluentCard>
         </div>
         break;
 }
 
 @code {
-    private int currentStep = 1;
-    private const int lastStep = 4;
     private string createPersonTitle = "";
     private pageState currentState = pageState.AskAboutChildren;
     public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents, AddParents, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandparents, Finished}
@@ -149,7 +177,7 @@
 
     private void UpdateUrl()
     {
-        NavigationManager.NavigateTo($"/flow/{currentStep}", false);
+        //NavigationManager.NavigateTo($"/flow/{currentStep}", false);
     }
 
 }

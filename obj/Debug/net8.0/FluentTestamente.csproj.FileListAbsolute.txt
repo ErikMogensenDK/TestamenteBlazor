@@ -115,3 +115,4 @@ C:\Users\erikm\repos\TestamenteBlazor\obj\Debug\net8.0\refint\FluentTestamente.d
 C:\Users\erikm\repos\TestamenteBlazor\obj\Debug\net8.0\FluentTestamente.pdb
 C:\Users\erikm\repos\TestamenteBlazor\obj\Debug\net8.0\FluentTestamente.genruntimeconfig.cache
 C:\Users\erikm\repos\TestamenteBlazor\obj\Debug\net8.0\ref\FluentTestamente.dll
+C:\Users\erikm\repos\TestamenteBlazor\bin\Debug\net8.0\Newtonsoft.Json.dll

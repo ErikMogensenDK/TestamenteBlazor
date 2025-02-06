@@ -1,5 +1,7 @@
 @namespace FluentTestamente.Components
 @using Models
+@using Services;
+@inject Services.TestamenteApiClient testamenteApiClient;
 
 <FluentCard Style="max-width: 500px; min-height: 500px; margin: 20px auto; padding: 20px;overflow: visible;">
     <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
@@ -48,10 +50,11 @@
     private IQueryable<Person?> savedPeopleQueryable;
     private DateTime? selectedDate;
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
         base.OnInitialized();
         selectedDate = DateTime.Now.AddYears(-30); 
+        await GetPerson();
     }
 
 
@@ -69,8 +72,22 @@
         newPerson.Address = person.Address;
         newPerson.IsAlive= person.IsAlive;
         newPerson.BirthDate = selectedDate;
-        newPerson.DateOnlyBirthDateString = newPerson.BirthDate?.ToString("dd-MM-yyyy");
+        //newPerson.DateOnlyBirthDateString = newPerson.BirthDate?.ToString("dd-MM-yyyy");
         return newPerson;
+    }
+    private async Task GetPerson()
+    {
+        var myPerson = await testamenteApiClient.PersonGETAsync(new("4FDE8A2D-6411-46F2-B10E-04693F712FE9"));
+        Person mappedPerson = MapDtoToPerson(myPerson);
+        savedPeople = new(){mappedPerson};
+        savedPeopleQueryable = savedPeople.AsQueryable();
+        StateHasChanged();
+    }
+    private Person MapDtoToPerson(PersonQueryDto dto)
+    {
+        //Person myGuy = new() {Name=dto.Name, Address = dto.Address, BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day)};
+        Person myGuy = new() {Name=dto.Name, Address = dto.Address, BirthDate = dto.BirthDate};
+        return myGuy;
     }
 
 }
