@@ -166,18 +166,4 @@
         } *@
     }
 
-    private void NextStep()
-    {
-        //currentState = pageState.Parse((pageState)((int)currentState + 1))
-        //currentStep++;
-        currentState = pageState.AskAboutSpouse;
-        StateHasChanged();
-        //UpdateUrl();
-    }
-
-    private void UpdateUrl()
-    {
-        //NavigationManager.NavigateTo($"/flow/{currentStep}", false);
-    }
-
 }

@@ -54,7 +54,6 @@
     {
         base.OnInitialized();
         selectedDate = DateTime.Now.AddYears(-30); 
-        await GetPerson();
     }
 
 
@@ -72,7 +71,6 @@
         newPerson.Address = person.Address;
         newPerson.IsAlive= person.IsAlive;
         newPerson.BirthDate = selectedDate;
-        //newPerson.DateOnlyBirthDateString = newPerson.BirthDate?.ToString("dd-MM-yyyy");
         return newPerson;
     }
     private async Task GetPerson()
@@ -85,7 +83,6 @@
     }
     private Person MapDtoToPerson(PersonQueryDto dto)
     {
-        //Person myGuy = new() {Name=dto.Name, Address = dto.Address, BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day)};
         Person myGuy = new() {Name=dto.Name, Address = dto.Address, BirthDate = dto.BirthDate};
         return myGuy;
     }

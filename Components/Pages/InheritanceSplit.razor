@@ -1,7 +1,8 @@
-﻿@inject TestamenteApiClient testamenteApiClient
+﻿@using Services
+@inject TestamenteApiClient testamenteApiClient
 @using Components
 @page "/fordeling"
-
+@* 
 <PeopleListComponent PeopleQueryable = people>
 
 </PeopleListComponent>
@@ -17,4 +18,4 @@
     {
         testamenteApiClient.GetPeopleAssociatedWithUser(user.Id);
     }
-}
+} *@
