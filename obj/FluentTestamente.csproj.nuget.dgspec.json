@@ -54,9 +54,21 @@
               "target": "Package",
               "version": "[4.11.1, )"
             },
+            "Syncfusion.Blazor.Charts": {
+              "target": "Package",
+              "version": "[24.2.7, )"
+            },
             "newtonsoft.json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "syncfusion.blazor.themes": {
+              "target": "Package",
+              "version": "[24.2.7, )"
+            },
+            "syncfusion.licensing": {
+              "target": "Package",
+              "version": "[28.2.5, )"
             }
           },
           "imports": [

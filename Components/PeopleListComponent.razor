@@ -10,6 +10,7 @@
     <PropertyColumn Title="Nulevende" Property="@(c => c!.IsAlive)" Align="Align.End"/>
 </FluentDataGrid>
 
+
 @code{
 	[Parameter]
 	public IQueryable<Person?> PeopleQueryable{ get; set; }

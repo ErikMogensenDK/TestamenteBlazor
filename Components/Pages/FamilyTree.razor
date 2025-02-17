@@ -1,13 +1,25 @@
-﻿@using Components
+﻿@using Microsoft.FluentUI.AspNetCore.Components
+@using FluentTestamente.Services
 @using Models
 @page "/flow"
-@* @page "/flow/{State:pageState}" *@
 @inject NavigationManager NavigationManager
+@inject UserService userService
+@inject TestamenteApiClient apiClient
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
 @switch (currentState)
 {
+    case pageState.AskAboutUser:
+        <div>
+            <div>
+                <CreatePersonComponent User="@User" Inheritants="@Inheritants" Text="Angiv dine egne data" RelationToUser= "@relationToUser.User"
+                    OnFinished="@(() => {currentState = pageState.AskAboutChildren; StateHasChanged();})"
+                    OnCancel="@(() => {currentState = pageState.AskAboutUser; StateHasChanged();})">
+                </CreatePersonComponent>
+            </div>
+        </div>
+        break;
     case pageState.AskAboutChildren:
     <div>
         <QuestionComponent 
@@ -22,6 +34,8 @@
             <CreatePersonComponent 
                 Inheritants = "@Inheritants"
                 Text = "Angiv data for barn/børn"
+                RelationToUser = "@relationToUser.Child"
+                User = "@User"
                 OnFinished = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutChildren; StateHasChanged();})">
             </CreatePersonComponent>
@@ -32,7 +46,7 @@
         <QuestionComponent 
             Text = "Har du en nulevende ægtefælle?" 
             OnYes = "@(() => {currentState = pageState.AddSpouse; StateHasChanged();})"
-            OnNo = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AddFather; StateHasChanged();})"
             >
         </QuestionComponent>
         </div>
@@ -42,40 +56,56 @@
             <CreatePersonComponent 
                 Inheritants = "@Inheritants"
                 Text = "Angiv data for Ægtefælle"
-                OnFinished = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})"
+                RelationToUser = "@relationToUser.Spouse"
+                User = "@User"
+                OnFinished = "@(() => {currentState = pageState.AddFather; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutSpouse; StateHasChanged();})">
             </CreatePersonComponent>
         </div>
         break;
-    case pageState.AskAboutParents:
+    case pageState.AddFather:
     if (Inheritants.Count > 0)
     {
         currentState=pageState.Finished;
         StateHasChanged();
         break;
     }
+// User cannot continue without adding both mother and father, since they will be nescessary for calculating inheritance
+// in this case, since there are no first class heirs(i.e.children or spouse)
         <div>
         <QuestionComponent 
-            Text = "Har du en eller flere levende forældre?" 
-            OnYes = "@(() => {currentState = pageState.AddParents; StateHasChanged();})"
-            OnNo = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
+            Text = "Tilføj data for din far" 
+            OnYes = "@(() => {currentState = pageState.AddMother; StateHasChanged();})"
+            OnNo = "@(() => {currentState = pageState.AddFather; StateHasChanged();})"
             >
         </QuestionComponent>
-        </div>
-        break;
-    case pageState.AddParents:
         <div>
             <CreatePersonComponent 
                 Inheritants = "@Inheritants"
-                Text = "Angiv data for Forældre"
+                Text = "Angiv data for din Far"
+                RelationToUser = "@relationToUser.Father"
+                User = "@User"
+                OnFinished = "@(() => {currentState = pageState.AddMother; StateHasChanged();})"
+                OnCancel = "@(() => {currentState = pageState.AddFather; StateHasChanged();})">
+            </CreatePersonComponent>
+        </div>
+        </div>
+        break;
+    case pageState.AddMother:
+        <div>
+            <CreatePersonComponent 
+                Inheritants = "@Inheritants"
+                Text = "Angiv data for din Mor"
+                RelationToUser = "@relationToUser.Mother"
+                User = "@User"
                 OnFinished = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})"
-                OnCancel = "@(() => {currentState = pageState.AskAboutParents; StateHasChanged();})">
+                OnCancel = "@(() => {currentState = pageState.AddMother; StateHasChanged();})">
             </CreatePersonComponent>
         </div>
         break;
     case pageState.AskAboutSiblings:
         <div>
-            <QuestionComponent Text="Har du en eller flere levende biologiske søskende?"
+            <QuestionComponent Text="Har du en eller flere biologiske søskende?"
                 OnYes="@(() => {currentState = pageState.AddSiblings; StateHasChanged();})"
                 OnNo="@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})">
             </QuestionComponent>
@@ -86,14 +116,16 @@
             <CreatePersonComponent 
                 Inheritants = "@Inheritants"
                 Text = "Angiv data for biologiske søskende"
-                OnFinished = "@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})"
+                RelationToUser = "@relationToUser.Sibling"
+                User = "@User"
+                OnFinished = "@(() => {currentState = pageState.Finished; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AskAboutSiblings; StateHasChanged();})">
             </CreatePersonComponent>
         </div>
         break;
 
     //if any inheritants have been added at this point, grandparents are irrelevant!
-    case pageState.AskAboutGrandparents:
+    @* case pageState.AskAboutGrandparents:
     if (Inheritants.Count > 0)
     {
         currentState=pageState.Finished;
@@ -118,22 +150,19 @@
                 OnCancel = "@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})">
             </CreatePersonComponent>
         </div>
-        break;
+        break; *@
     case pageState.Finished:
         <div>
             <FluentCard Style="max-width: 500px; min-height: 300px; margin: 20px auto; padding: 20px;overflow: visible;">
 
-            <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+            <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Vertical" VerticalGap="10">
 
             <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
                 Alle arvinger er blevet tilføjet!
                 Tryk på knappen nedenfor, for at se fordeling af arv.
             </FluentLabel>
 
-            @* <FluentButton Appearance="Appearance.Accent" OnClick="">
-                Gå til arvefordeling!
-            </FluentButton> *@
-            <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center"> 
+            <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center"> 
                 <FluentButton Appearance="Appearance.Accent" OnClick="@(() => NavigationManager.NavigateTo("/fordeling"))">
                     Gå til arvefordeling!
                 </FluentButton>
@@ -147,12 +176,35 @@
 
 @code {
     private string createPersonTitle = "";
-    private pageState currentState = pageState.AskAboutChildren;
-    public enum pageState { AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, AskAboutParents, AddParents, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandparents, Finished}
+    private pageState currentState = pageState.AskAboutUser;
+    public enum pageState
+    {
+        AskAboutUser, AskAboutChildren, AddChildren, AskAboutSpouse, AddSpouse, 
+        AddMother, AddFather, AskAboutSiblings, AddSiblings, AskAboutGrandparents, AddGrandparents, Finished
+    }
+    public enum relationToUser
+    {
+        User, Child, Father, Mother, Spouse, Sibling,
+        MothersFather, MothersMother, FathersMother, FathersFather
+    }
     public pageState state { get; set; }
 
     [Parameter]
     public List<Person> Inheritants { get; set; } = new();
+
+    [Parameter]
+    public Person User { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        Guid id = await userService.FetchCurrentUserIdAsync();
+        if (id == Guid.Empty)
+        {
+            User = new(){Id = id};
+            userService.CurrentUserId = id;
+        }
+    }
 
 
     protected override void OnParametersSet()
@@ -165,5 +217,6 @@
             NavigationManager.NavigateTo("/flow/AskAboutChildren", false);
         } *@
     }
+
 
 }

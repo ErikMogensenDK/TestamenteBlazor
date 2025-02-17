@@ -10,5 +10,8 @@
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.1" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.11.1" />
     <PackageReference Include="newtonsoft.json" Version="13.0.3" />
+    <PackageReference Include="Syncfusion.Blazor.Charts" Version="24.2.7" />
+    <PackageReference Include="syncfusion.blazor.themes" Version="24.2.7" />
+    <PackageReference Include="syncfusion.licensing" Version="28.2.5" />
   </ItemGroup>
 </Project>

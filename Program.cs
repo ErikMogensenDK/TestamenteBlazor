@@ -1,6 +1,8 @@
 using Microsoft.FluentUI.AspNetCore.Components;
 using FluentTestamente.Components;
 using FluentTestamente.Services;
+using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 
 
 internal class Program
@@ -8,6 +10,7 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        SyncfusionLicenseProvider.RegisterLicense("MzcyMjg4NEAzMjM4MmUzMDJlMzBqWDREYXBoekUyeW1FeGZMV2Z2MG0xYmFCRllVK0k2eDdmVHZlYi8xNnVNPQ==");
         var services = builder.Services;
 
         // Add services to the container.
@@ -15,7 +18,8 @@ internal class Program
             .AddInteractiveServerComponents();
         services.AddFluentUIComponents();
         services.AddHttpClient("TestamenteApiClient");
-        builder.Services.AddTransient<TestamenteApiClient>(provider =>
+        services.AddScoped<UserService>();
+        services.AddSingleton<TestamenteApiClient>(provider =>
         {
             var httpClientFactory = provider.GetService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient("TestamenteApi");
@@ -23,6 +27,7 @@ internal class Program
 
             return new TestamenteApiClient(baseUrl, httpClient);
         });
+        services.AddSyncfusionBlazor();
 
         var app = builder.Build();
 

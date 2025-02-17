@@ -1,10 +1,11 @@
 @namespace FluentTestamente.Components
 @using Models
-@using Services;
-@inject Services.TestamenteApiClient testamenteApiClient;
+@using FluentTestamente.Services;
+@using static FluentTestamente.Components.Pages.FamilyTree
+@inject TestamenteApiClient testamenteApiClient;
 
 <FluentCard Style="max-width: 500px; min-height: 500px; margin: 20px auto; padding: 20px;overflow: visible;">
-    <FluentStack Orientation="Orientation.Vertical" VerticalGap="10">
+    <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Vertical" VerticalGap="10">
         <FluentLabel Typo="@Typography.H3" Style="text-align: center; margin-bottom: 20px;">
             @Text
         </FluentLabel>
@@ -17,13 +18,13 @@
         
         <FluentCheckbox @bind-Value="@person.IsAlive" Label="Nulevende"/>
 
-        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
+        <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
             <FluentButton Appearance="Appearance.Accent" OnClick="CreatePersonAsync">
                 Opret person
             </FluentButton>
         </FluentStack>
 
-        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
+        <FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center">
             <FluentButton Appearance="Appearance.Neutral" OnClick="OnFinished">
                 Jeg er færdig med at tilføje data
             </FluentButton>
@@ -45,24 +46,91 @@
     [Parameter] public string Text { get; set; }
     [Parameter] public EventCallback OnFinished { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
-    [Parameter] public List<Person> Inheritants {get;set;}
+    [Parameter] public List<Person> Inheritants { get; set; }
+    [Parameter] public Person User { get; set; }
+    [Parameter] public relationToUser RelationToUser{ get; set; }
     private List<Person> savedPeople = new();
     private IQueryable<Person?> savedPeopleQueryable;
-    private DateTime? selectedDate;
+    private DateTime? selectedDate = new();
 
     protected async override void OnInitialized()
     {
         base.OnInitialized();
         selectedDate = DateTime.Now.AddYears(-30); 
+        await GetPeople();
     }
 
 
     private async Task CreatePersonAsync()
     {
+        person.Id = Guid.NewGuid();
+        person.CreatedById = User.Id;
+        person = AddRelationToUser(person);
+        person = AddBirthDate(person);
         Inheritants.Add(CopyPerson(person));
         savedPeople.Add(CopyPerson(person));
         savedPeopleQueryable = savedPeople.AsQueryable();
+        CreatePersonRequest createPersonRequest = GenerateRequest(person);
+        //error handling missing
+        await testamenteApiClient.PersonPOSTAsync(person.Id, createPersonRequest);
         StateHasChanged();
+    }
+    private Person AddBirthDate (Person p)
+    {
+        DateTime newDate = new();
+        if (selectedDate != null)
+            newDate = (DateTime)selectedDate;
+        p.BirthDate = new(newDate.Year, newDate.Month, newDate.Day);
+        return p;
+    }
+    private CreatePersonRequest GenerateRequest(Person person)
+    {
+        CreatePersonRequest request = new(){
+            Name = person.Name, 
+            Address = person.Address,
+            BirthDate = new(person.BirthDate.Year, person.BirthDate.Month, person.BirthDate.Day),
+            IsAlive = person.IsAlive,
+            FatherId = person.FatherId,
+            MotherId = person.MotherId,
+            SpouseId = person.SpouseId,
+            CreatedById = person.CreatedById,
+        };
+        return request;
+    }
+    private Person AddRelationToUser(Person person)
+    {
+        switch(RelationToUser)
+        {
+            case relationToUser.User:
+            {
+                person.Id = User.Id;
+                break;
+            }
+            case relationToUser.Child:
+            {
+                User.FatherId = person.Id;
+                break;
+            }
+            case relationToUser.Father:
+            {
+                User.FatherId = person.Id;
+                break;
+            }
+            case relationToUser.Mother:
+            {
+                User.FatherId= person.Id;
+                break;
+            }
+            case relationToUser.Sibling:
+            {
+                person.FatherId = User.FatherId;
+                person.MotherId = User.MotherId;
+                break;
+            }
+            default:
+                break;
+        }
+        return person;
     }
     private Person CopyPerson(Person person)
     {
@@ -70,20 +138,34 @@
         newPerson.Name = person.Name;
         newPerson.Address = person.Address;
         newPerson.IsAlive= person.IsAlive;
-        newPerson.BirthDate = selectedDate;
+        newPerson.BirthDate = person.BirthDate;//new(newDate.Year, newDate.Month, newDate.Day);
         return newPerson;
     }
-    private async Task GetPerson()
+
+    private async Task GetPeople()
     {
-        var myPerson = await testamenteApiClient.PersonGETAsync(new("4FDE8A2D-6411-46F2-B10E-04693F712FE9"));
-        Person mappedPerson = MapDtoToPerson(myPerson);
-        savedPeople = new(){mappedPerson};
+        var people= await testamenteApiClient.ByCreatedByAsync(User.Id);
+        savedPeople = new();
+        foreach (var person in people)
+        {
+            Person mappedPerson = MapQueryDtoToPerson(person);
+            savedPeople.Add(mappedPerson);
+        }
         savedPeopleQueryable = savedPeople.AsQueryable();
         StateHasChanged();
     }
-    private Person MapDtoToPerson(PersonQueryDto dto)
+    private Person MapQueryDtoToPerson(PersonQueryDto dto)
     {
-        Person myGuy = new() {Name=dto.Name, Address = dto.Address, BirthDate = dto.BirthDate};
+        Person myGuy = new()
+            {
+                Name = dto.Name,
+                Address = dto.Address,
+                BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day),
+		        IsAlive = dto.IsAlive,
+		        FatherId = dto.FatherId,
+                MotherId = dto.MotherId,
+                SpouseId = dto.SpouseId,
+            };
         return myGuy;
     }
 

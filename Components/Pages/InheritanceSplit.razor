@@ -1,21 +1,96 @@
-﻿@using Services
+﻿@rendermode InteractiveServer 
+@using FluentTestamente.Models
+@using Services
 @inject TestamenteApiClient testamenteApiClient
-@using Components
+@inject UserService userService;
 @page "/fordeling"
-@* 
-<PeopleListComponent PeopleQueryable = people>
 
-</PeopleListComponent>
+<FluentStack Orientation="Microsoft.FluentUI.AspNetCore.Components.Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center"> 
+    <FluentCard>
+        <PeopleListComponent PeopleQueryable=@savedPeopleQueryable>
+        </PeopleListComponent>
+    </FluentCard>
+
+    <FluentCard>
+        <InheritanceSplitComponent InheritanceShare="@InheritanceShare">
+        </InheritanceSplitComponent>
+    </FluentCard>
+</FluentStack>
 
 @code {
-    private IQueryable<Person>? people;
+
+    [Parameter]
+    public Person User { get; set; } = new();
+
+    [Parameter]
+    public List<InheritanceShare> InheritanceShare { get ; set; } = new();
+    @* {
+        new InheritanceShare { Name= "United States of America", Share= 46 },
+        new InheritanceShare { Name= "Great Britain", Share= 27 },
+        new InheritanceShare { Name= "China", Share= 26 },
+        new InheritanceShare { Name= "United Kingdom", Share= 23 },
+        new InheritanceShare { Name= "Australia", Share= 16 },
+        new InheritanceShare { Name= "India", Share= 36 },
+        new InheritanceShare { Name= "Nigeria", Share= 12 },
+        new InheritanceShare { Name= "Brazil", Share= 20 },
+     }; *@
+
+    private List<Person> savedPeople = new();
+    private IQueryable<Person?> savedPeopleQueryable;
 
     protected override async Task OnInitializedAsync()
     {
+        base.OnInitialized();
+        Guid id = await userService.FetchCurrentUserIdAsync();
+        await GetPeople();
+        IDictionary<string, double> split = new Dictionary<string, double>();
+        if (savedPeople?.Count != 0)
+        {
+            split = await testamenteApiClient.CalculateInheritanceForPersonWithGuidAsync(id);
+        }
+        if (split?.Keys.Count == 0)
+        {
+            return;
+        }
+        List<InheritanceShare> personInheritanceList = new();
+        foreach (var key in split.Keys)
+        {
+            Guid idOfInheritant = new(key);
+            if (id == idOfInheritant)
+                continue;
+            Person inheritant = savedPeople.Where(p => p.Id == idOfInheritant).First();
+            InheritanceShare share = new(){Name = inheritant.Name, Share = split[key]};
+        }
+        InheritanceShare = personInheritanceList;
+        StateHasChanged();
+    }
 
-    }
-    private async GetPeople()
+    private async Task GetPeople()
     {
-        testamenteApiClient.GetPeopleAssociatedWithUser(user.Id);
+        Guid id = await userService.FetchCurrentUserIdAsync();
+        var people= await testamenteApiClient.ByCreatedByAsync(id);
+        savedPeople = new();
+        foreach (var person in people)
+        {
+            Person mappedPerson = MapQueryDtoToPerson(person);
+            savedPeople.Add(mappedPerson);
+        }
+        savedPeopleQueryable = savedPeople.AsQueryable();
+        StateHasChanged();
     }
-} *@
+
+    private Person MapQueryDtoToPerson(PersonQueryDto dto)
+    {
+        Person myGuy = new()
+            {
+                Name = dto.Name,
+                Address = dto.Address,
+                BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day),
+		        IsAlive = dto.IsAlive,
+		        FatherId = dto.FatherId,
+                MotherId = dto.MotherId,
+                SpouseId = dto.SpouseId,
+            };
+        return myGuy;
+    }
+} 
