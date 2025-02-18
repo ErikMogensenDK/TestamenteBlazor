@@ -56,9 +56,11 @@
         foreach (var key in split.Keys)
         {
             Guid idOfInheritant = new(key);
+            if (idOfInheritant == Guid.Empty)
+                throw new InvalidDataException("Guid gotten for inheritanceSplot was empty");
             if (id == idOfInheritant)
                 continue;
-            Person inheritant = savedPeople.Where(p => p.Id == idOfInheritant).First();
+          Person inheritant = savedPeople.Where(p => p.Id == idOfInheritant).First();
             InheritanceShare share = new(){Name = inheritant.Name, Share = split[key]};
             personInheritanceList.Add(share);
         }

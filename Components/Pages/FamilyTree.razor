@@ -1,7 +1,7 @@
 ﻿@using Microsoft.FluentUI.AspNetCore.Components
 @using FluentTestamente.Services
 @using Models
-@page "/flow"
+@page "/OpretArvinger"
 @inject NavigationManager NavigationManager
 @inject UserService userService
 @inject TestamenteApiClient apiClient
@@ -64,7 +64,7 @@
         </div>
         break;
     case pageState.AddFather:
-    if (Inheritants.Count > 0)
+    if (Inheritants.Count > 1)
     {
         currentState=pageState.Finished;
         StateHasChanged();
@@ -72,13 +72,6 @@
     }
 // User cannot continue without adding both mother and father, since they will be nescessary for calculating inheritance
 // in this case, since there are no first class heirs(i.e.children or spouse)
-        <div>
-        <QuestionComponent 
-            Text = "Tilføj data for din far" 
-            OnYes = "@(() => {currentState = pageState.AddMother; StateHasChanged();})"
-            OnNo = "@(() => {currentState = pageState.AddFather; StateHasChanged();})"
-            >
-        </QuestionComponent>
         <div>
             <CreatePersonComponent 
                 Inheritants = "@Inheritants"
@@ -88,7 +81,6 @@
                 OnFinished = "@(() => {currentState = pageState.AddMother; StateHasChanged();})"
                 OnCancel = "@(() => {currentState = pageState.AddFather; StateHasChanged();})">
             </CreatePersonComponent>
-        </div>
         </div>
         break;
     case pageState.AddMother:
@@ -107,7 +99,8 @@
         <div>
             <QuestionComponent Text="Har du en eller flere biologiske søskende?"
                 OnYes="@(() => {currentState = pageState.AddSiblings; StateHasChanged();})"
-                OnNo="@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})">
+                OnNo="@(() => {currentState = pageState.Finished; StateHasChanged();})">
+                @* OnNo="@(() => {currentState = pageState.AskAboutGrandparents; StateHasChanged();})"> *@
             </QuestionComponent>
         </div>
         break;

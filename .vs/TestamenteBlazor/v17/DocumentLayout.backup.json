@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\components\\pages\\inheritancesplit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|solutionrelative:components\\pages\\inheritancesplit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\components\\pages\\inheritancesplit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|solutionrelative:components\\pages\\inheritancesplit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\components\\createpersoncomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|solutionrelative:components\\createpersoncomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\components\\inheritancesplitcomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|solutionrelative:components\\inheritancesplitcomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\components\\inheritancesplitcomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|solutionrelative:components\\inheritancesplitcomponent.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\fluenttestamente.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{45F2B0A7-FDBB-4A64-8B07-D9DAB55DE302}|FluentTestamente.csproj|solutionrelative:fluenttestamente.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\fluenttestamente.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|solutionrelative:fluenttestamente.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|c:\\users\\erikm\\repos\\testamenteblazor\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{409A5C89-00B3-4225-B0D4-64ABC8E4A58E}|FluentTestamente.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,13 +42,26 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "CreatePersonComponent.razor",
+              "DocumentMoniker": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Components\\CreatePersonComponent.razor",
+              "RelativeDocumentMoniker": "Components\\CreatePersonComponent.razor",
+              "ToolTip": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Components\\CreatePersonComponent.razor",
+              "RelativeToolTip": "Components\\CreatePersonComponent.razor",
+              "ViewState": "AgIAAGEAAAAAAAAAAAApwHwAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-02-18T08:33:15.445Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "InheritanceSplit.razor",
               "DocumentMoniker": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Components\\Pages\\InheritanceSplit.razor",
               "RelativeDocumentMoniker": "Components\\Pages\\InheritanceSplit.razor",
-              "ToolTip": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Components\\Pages\\InheritanceSplit.razor*",
-              "RelativeToolTip": "Components\\Pages\\InheritanceSplit.razor*",
-              "ViewState": "AgIAAEgAAAAAAAAAAAASwF0AAAAlAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Components\\Pages\\InheritanceSplit.razor",
+              "RelativeToolTip": "Components\\Pages\\InheritanceSplit.razor",
+              "ViewState": "AgIAACMAAAAAAAAAAAAnwD8AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-02-17T13:25:01.899Z",
               "EditorCaption": ""
@@ -76,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\erikm\\repos\\TestamenteBlazor\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",

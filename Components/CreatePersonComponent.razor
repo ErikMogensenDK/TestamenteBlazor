@@ -67,14 +67,16 @@
     {
         person.Id = Guid.NewGuid();
         person.CreatedById = await userService.FetchCurrentUserIdAsync();
-        person = AddRelationToUser(person);
         person = AddBirthDate(person);
+        person = AddRelationToUser(person);
         Inheritants.Add(CopyPerson(person));
         savedPeople.Add(CopyPerson(person));
         savedPeopleQueryable = savedPeople.AsQueryable();
         CreatePersonRequest createPersonRequest = GenerateRequest(person);
         //error handling missing
         await testamenteApiClient.PersonPOSTAsync(person.Id, createPersonRequest);
+        CreatePersonRequest createUserUpdateRequest = GenerateRequest(User);
+        await testamenteApiClient.PersonPUTAsync(User.Id, createUserUpdateRequest);
         StateHasChanged();
     }
     private Person AddBirthDate (Person p)
@@ -106,6 +108,12 @@
             case relationToUser.User:
             {
                 person.Id = User.Id;
+                User.Name = person.Name;
+                User.Address = person.Address;
+                User.Address = person.Address;
+                User.BirthDate = person.BirthDate;
+                User.IsAlive = person.IsAlive;
+                User.CreatedById = User.Id;
                 break;
             }
             case relationToUser.Child:
