@@ -201,8 +201,8 @@
         Guid id = await userService.FetchCurrentUserIdAsync();
         if (id == Guid.Empty)
         {
-            User = new(){Id = id};
-            userService.CurrentUserId = id;
+            userService.CurrentUserId = Guid.NewGuid();
+            User = new(){Id = userService.CurrentUserId};
         }
     }
 

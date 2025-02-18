@@ -2,6 +2,7 @@
 @using Models
 @using FluentTestamente.Services;
 @using static FluentTestamente.Components.Pages.FamilyTree
+@inject UserService userService
 @inject TestamenteApiClient testamenteApiClient;
 
 <FluentCard Style="max-width: 500px; min-height: 500px; margin: 20px auto; padding: 20px;overflow: visible;">
@@ -57,6 +58,7 @@
     {
         base.OnInitialized();
         selectedDate = DateTime.Now.AddYears(-30); 
+        User.Id = await userService.FetchCurrentUserIdAsync();
         await GetPeople();
     }
 
@@ -64,7 +66,7 @@
     private async Task CreatePersonAsync()
     {
         person.Id = Guid.NewGuid();
-        person.CreatedById = User.Id;
+        person.CreatedById = await userService.FetchCurrentUserIdAsync();
         person = AddRelationToUser(person);
         person = AddBirthDate(person);
         Inheritants.Add(CopyPerson(person));
@@ -108,7 +110,7 @@
             }
             case relationToUser.Child:
             {
-                User.FatherId = person.Id;
+                person.FatherId = User.Id;
                 break;
             }
             case relationToUser.Father:
@@ -118,7 +120,7 @@
             }
             case relationToUser.Mother:
             {
-                User.FatherId= person.Id;
+                User.MotherId = person.Id;
                 break;
             }
             case relationToUser.Sibling:
@@ -144,7 +146,8 @@
 
     private async Task GetPeople()
     {
-        var people= await testamenteApiClient.ByCreatedByAsync(User.Id);
+        var id = await userService.FetchCurrentUserIdAsync();
+        var people= await testamenteApiClient.ByCreatedByAsync(id);
         savedPeople = new();
         foreach (var person in people)
         {
@@ -158,6 +161,7 @@
     {
         Person myGuy = new()
             {
+                Id = dto.Id,
                 Name = dto.Name,
                 Address = dto.Address,
                 BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day),
@@ -165,6 +169,7 @@
 		        FatherId = dto.FatherId,
                 MotherId = dto.MotherId,
                 SpouseId = dto.SpouseId,
+                CreatedById = User.Id
             };
         return myGuy;
     }

@@ -60,6 +60,7 @@
                 continue;
             Person inheritant = savedPeople.Where(p => p.Id == idOfInheritant).First();
             InheritanceShare share = new(){Name = inheritant.Name, Share = split[key]};
+            personInheritanceList.Add(share);
         }
         InheritanceShare = personInheritanceList;
         StateHasChanged();
@@ -68,7 +69,7 @@
     private async Task GetPeople()
     {
         Guid id = await userService.FetchCurrentUserIdAsync();
-        var people= await testamenteApiClient.ByCreatedByAsync(id);
+        var people = await testamenteApiClient.ByCreatedByAsync(id);
         savedPeople = new();
         foreach (var person in people)
         {
@@ -83,6 +84,7 @@
     {
         Person myGuy = new()
             {
+                Id = dto.Id,
                 Name = dto.Name,
                 Address = dto.Address,
                 BirthDate = new(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day),
@@ -90,6 +92,7 @@
 		        FatherId = dto.FatherId,
                 MotherId = dto.MotherId,
                 SpouseId = dto.SpouseId,
+                CreatedById = User.Id
             };
         return myGuy;
     }

@@ -6,7 +6,18 @@
 <SfAccumulationChart Title="Min arv">
     <AccumulationChartSeriesCollection>
         <AccumulationChartSeries DataSource="@InheritanceShare" XName="Name" YName="Share">
-            <AccumulationDataLabelSettings Visible="true"></AccumulationDataLabelSettings>
+            <AccumulationDataLabelSettings Visible="true" Position="AccumulationLabelPosition.Inside">
+                <Template>
+                    @{
+                        var data = context as AccumulationChartDataPointInfo;
+                    }
+                    <div class="label-div">
+                        <p class="label-percentage-text">
+                            @data.Percentage %
+                        </p>
+                    </div>
+                </Template>
+            </AccumulationDataLabelSettings>
         </AccumulationChartSeries>
     <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
     <AccumulationChartLegendSettings Visible="true"></AccumulationChartLegendSettings>
@@ -16,50 +27,7 @@
 @code{
     [Parameter]
     public List<InheritanceShare> InheritanceShare { get; set; } = new();
-
-    public List<InheritanceShare> inheritanceShare = new List<InheritanceShare>
-    {
-        new InheritanceShare { Name= "United States of America", Share= 46 },
-        new InheritanceShare { Name= "Great Britain", Share= 27 },
-        new InheritanceShare { Name= "China", Share= 26 },
-        new InheritanceShare { Name= "United Kingdom", Share= 23 },
-        new InheritanceShare { Name= "Australia", Share= 16 },
-        new InheritanceShare { Name= "India", Share= 36 },
-        new InheritanceShare { Name= "Nigeria", Share= 12 },
-        new InheritanceShare { Name= "Brazil", Share= 20 },
-     };
 }
 
 
-@* <SfAccumulationChart Title="Fordeling af Arv">
-    <AccumulationChartSeriesCollection>
-        <AccumulationChartSeries DataSource="@privateInheritance" XName="Name " YName="Share">
-            <AccumulationDataLabelSettings Visible="true"></AccumulationDataLabelSettings>
-        </AccumulationChartSeries>
-    </AccumulationChartSeriesCollection>
-    <AccumulationChartTooltipSettings Enable="true"></AccumulationChartTooltipSettings>
-    <AccumulationChartLegendSettings Visible="true"></AccumulationChartLegendSettings>
-</SfAccumulationChart>
-
-@code{
-    [Parameter]
-    public List<InheritanceShare> InheritanceShare { get; set; } = new();
-
-    public List<InheritanceShare> privateInheritance { get; set; } = new()
-        {
-            new InheritanceShare { Name="Chrome", Share = 37.0 },
-            new InheritanceShare { Name="UC Browser", Share = 17.0 }
-        };
-
-
-    @* protected async override Task OnInitializedAsync()
-    {
-        base.OnInitialized();
-        privateInheritance = new List<InheritanceShare>()
-        {
-            new InheritanceShare { Name="Chrome", Share = 37 },
-            new InheritanceShare { Name="UC Browser", Share = 17 }
-        };
-        StateHasChanged();
-    } *@ 
 

@@ -18,7 +18,7 @@ internal class Program
             .AddInteractiveServerComponents();
         services.AddFluentUIComponents();
         services.AddHttpClient("TestamenteApiClient");
-        services.AddScoped<UserService>();
+        services.AddSingleton<UserService, UserService>();
         services.AddSingleton<TestamenteApiClient>(provider =>
         {
             var httpClientFactory = provider.GetService<IHttpClientFactory>();
